@@ -1,10 +1,11 @@
-import os
 from pprint import pprint
+from datetime import datetime
+import os
 
-# Чтение из файла
+
 def read_file(path_to_file):
     cook_book = {}
-    with open(path_to_file, 'r', encoding = "utf-8") as f:
+    with open(path_to_file, 'r', encoding="utf-8") as f:
         for line in f:
             if line.strip().isdigit():
                 quantity = int(line)
@@ -19,7 +20,29 @@ def read_file(path_to_file):
     return cook_book
 
 
-# Создание списка
+def decorator_path(path):
+    def logger(decoration):
+        def wrapper(*args):
+            result = decoration(*args)
+            arg = []
+            for param in args:
+                arg.append(param)
+            dict_data = {
+                'Время': str(datetime.now()),
+                'Имя функции': decoration.__name__,
+                'Параметры вызова': arg,
+                'Результат работы программы': result
+            }
+            with open(path, 'w', encoding='utf-8') as f:
+                for key, val in dict_data.items():
+                    f.write('{}: {} \n'.format(key, val))
+
+        return wrapper
+
+    return logger
+
+
+@decorator_path(os.path.abspath('logger'))
 def get_shop_list_by_dishes(dishes_list, count):
     path_to_file = "./recipes.txt"
     cook_book = read_file(path_to_file)
@@ -33,8 +56,9 @@ def get_shop_list_by_dishes(dishes_list, count):
                     shopping_list[ingredient['ingredient_name']] = {'measure': ingredient['measure'],
                                                                     'quantity': ingredient['quantity'] * count}
                 else:
-                    all_amount = shopping_list[ingredient['ingredient_name']]['quantity'] + ingredient['quantity'] * count
-                    shopping_list[ingredient['ingredient_name']]['quantity'] = all_amount
+                    all_amount = shopping_list[ingredient['ingredient_name']]['quantity'] + ingredient[
+                        'quantity'] * count
+                    shopping_list[ingredient['ingredient_name']]['quantity\n'] = all_amount
     if shopping_list:
         pprint(shopping_list)
         return shopping_list
@@ -42,7 +66,6 @@ def get_shop_list_by_dishes(dishes_list, count):
         print("Введенного блюда нет в списке")
 
 
-# Получение данных для программы
 def start_program():
     dishes_list = []
     while True:
