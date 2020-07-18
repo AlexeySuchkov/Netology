@@ -33,9 +33,12 @@ def decorator_path(path):
                 'Параметры вызова': arg,
                 'Результат работы программы': result
             }
+
             with open(path, 'w', encoding='utf-8') as f:
                 for key, val in dict_data.items():
                     f.write('{}: {} \n'.format(key, val))
+
+            return result
 
         return wrapper
 
